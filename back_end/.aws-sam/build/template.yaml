@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'ihm
+
+  Sample SAM Template for ihm
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  GetSongsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetSongsFunction
+      Handler: app.getSongsLambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        GetSongs:
+          Type: Api
+          Properties:
+            Path: /songs
+            Method: get
+Outputs:
+  GetSongsApi:
+    Description: API Gateway endpoint URL for Prod stage for Get Songs function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/songs/
+  GetSongsFunction:
+    Description: Get Songs Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GetSongsFunction
+      - Arn
+  GetSongsFunctionIamRole:
+    Description: Implicit IAM Role created for Get Songs function
+    Value:
+      Fn::GetAtt:
+      - GetSongsFunctionRole
+      - Arn
