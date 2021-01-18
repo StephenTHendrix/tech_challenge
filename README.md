@@ -1,38 +1,39 @@
- # iHeartMedia - Music Lab - Code Challenge
+# iHeartMedia - Music Lab - Code Challenge
 
-Create a React application that shows a list of songs with their information and metrics displayed. The app should have at least **2 pages (views)**:
-A landing page, and a page to show data coming from an API.
+## Getting Started
 
-- Everything should be written in JavaScript / Node.
+### Back End
 
-- Fork this repo and share the link when you are finished!
+---
 
-### UI Checklist
+- Make sure you have the AWS CLI installed (I used version 2) and configured:
 
-- Create a React App using functional based components and hooks. No class based components, please.
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 
-- Create 2 views ( pages ) using React Router.
+- Place `songData.json` in an AWS S3 bucket.
 
-- Create a page that renders a table displaying a list songs coming from the API. Each row is a song, each column is a song attribute. 
+https://aws.amazon.com/s3/
 
-- Employ **some** styling but it doesn't have to be much. You can use the styled-components library but do not use any other styling help.
+- Install and configure the AWS SAM CLI:
 
-- Allow the user to scroll vertically and horizontally through columns and rows that go off screen.
+https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html
 
-- Allow the user to sort the order of the song rows by the column values.
+- Replace the `bucket` and `key` variables with the appropriate values from S3.
 
-- It **does not** need to be mobile responsive.
+- Navigate to the `back_end` folder in a terminal, and run the command `sam local start-api -p 8080`.
 
-### API Notes
+### Front End
 
-Store the included JSON file in an S3 bucket and use the AWS SAM CLI with a **node.js** lambda function to serve the frontend with the data.
+---
 
-Authentication is not necessary.
+- Navigate to the `front_end` folder in a terminal, and run the command `npm i`.
 
-You do not need to deploy or host this anywhere.
+- Once all of the dependencies have installed, run the command `npm start`.
 
-SAM CLI instructions: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html
+That's it! You should be able to navigate to the `/songs` page from the landing page, where you'll see the songs from `songData.json` displayed in a table. You can scroll vertically and horizontally, and sort the data either ascending or descending by column name.
 
-## Bonus
+### Final Result:
 
-Use GraphQL and/or Typescript
+---
+
+![Alt Text](songDatabase.gif)
