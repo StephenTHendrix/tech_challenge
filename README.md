@@ -8,7 +8,7 @@
 
 The back end was bootstrapped from the AWS SAM CLI Hello World Example. The original README has been left in in a nearly-unaltered state in case it can be useful.
 
-- Make sure you have the AWS CLI installed (I used version 2) and configured:
+- Make sure you have the AWS CLI installed and configured (I used version 2):
 
 https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 
