@@ -37,3 +37,17 @@ That's it! You should be able to navigate to the `/songs` page from the landing 
 ---
 
 ![Alt Text](songDatabase.gif)
+
+### Attributions:
+
+- Header Favicon:
+
+https://icon-icons.com/icon/music-melody-musical-note-music-sheet/113840
+
+- Loading Gif: 
+
+https://www.pinterest.com/pin/766386061564859410/
+
+- Sort Arrow:
+
+https://www.flaticon.com/free-icon/arrow-down-sign-to-navigate_32195?related_id=32195
