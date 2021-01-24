@@ -10,7 +10,7 @@ import { GlobalStyles } from '../globalStyles';
 import { Home, Song, Songs } from '_pages';
 import { Navbar } from '_components';
 
-export const Routes = () => {
+export const Routes = ({ allSongsData }) => {
   return (
     <>
       <GlobalStyles />
@@ -18,8 +18,16 @@ export const Routes = () => {
         <Navbar />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/song" component={Song} />
-          <Route exact path="/songs" component={Songs} />
+          <Route
+            exact
+            path="/song"
+            component={() => <Song allSongsData={allSongsData} />}
+          />
+          <Route
+            exact
+            path="/songs"
+            component={() => <Songs allSongsData={allSongsData} />}
+          />
           <Redirect to="/" />
         </Switch>
       </Router>

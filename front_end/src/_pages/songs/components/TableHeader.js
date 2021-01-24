@@ -21,7 +21,7 @@ const TableCell = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   color: white;
-  background-color: ${colors.tableHeader};
+  background-color: ${colors.table};
 `;
 
 const ColumnName = styled.div`
