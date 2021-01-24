@@ -24,19 +24,21 @@ const Table = styled.div`
 export const Songs = () => {
   const [songs, setSongs] = useState([]);
   useEffect(() => {
+    fetch(process.env.REACT_APP_GET_ALL_SONGS_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        setSongs(data);
+      });
+
     fetch(process.env.REACT_APP_GET_SONG_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: `
       {getSongInfo(song: "Checles") {artist playCount metricA}}`,
     })
-      .then((res) => res.json())
-      .then((res) => console.log(res.data));
-
-    fetch(process.env.REACT_APP_GET_ALL_SONGS_URL)
       .then((response) => response.json())
       .then((data) => {
-        setSongs(data);
+        console.log(data);
       });
   }, []);
 
