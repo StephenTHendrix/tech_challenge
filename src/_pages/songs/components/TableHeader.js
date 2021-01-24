@@ -80,9 +80,11 @@ export const TableHeader = ({ songs, setSongs }) => {
   };
 
   const map = useMemo(() => {
-    const object = {};
-    songKeys.map((key) => (object[key] = formatHeaderCell(key)));
-    return object;
+    const mappedSongKeys = {};
+    songKeys.map(
+      (songKey) => (mappedSongKeys[songKey] = formatHeaderCell(songKey))
+    );
+    return mappedSongKeys;
   }, [songKeys]);
 
   return (
