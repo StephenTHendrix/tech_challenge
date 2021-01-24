@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { SortArrow } from '_components';
@@ -79,12 +79,18 @@ export const TableHeader = ({ songs, setSongs }) => {
     }
   };
 
+  const map = useMemo(() => {
+    const object = {};
+    songKeys.map((key) => (object[key] = formatHeaderCell(key)));
+    return object;
+  }, [songKeys]);
+
   return (
     <StyledTableRow>
       {songKeys.map((songKey, index) => (
         <TableCell key={songKey + '-' + index} allowSort>
           <ColumnName style={{ marginRight: 'auto' }}>
-            {formatHeaderCell(songKey)}
+            {map[songKey]}
           </ColumnName>
           <SortArrowClickContainer onClick={() => sortAndSetSongs(songKey)}>
             <SortArrow />

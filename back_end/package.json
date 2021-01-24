@@ -1,0 +1,17 @@
+{
+    "name": "serverless-leaderboard",
+    "description": "Serverless leaderboard implementation with AWS Lambda and Redis",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "aws-sdk": "^2.831.0",
+        "graphql": "^15.4.0",
+        "redis": "^3.0.2"
+    },
+    "devDependencies": {
+        "jest": "^24.7.1"
+    },
+    "scripts": {
+        "test": "jest"
+    }
+}

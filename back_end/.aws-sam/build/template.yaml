@@ -1,40 +1,60 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: 'ihm
-
-  Sample SAM Template for ihm
-
-  '
+AWSTemplateFormatVersion: 2010-09-09
+Description: song-filter
+Transform:
+- AWS::Serverless-2016-10-31
 Globals:
   Function:
-    Timeout: 3
+    Runtime: nodejs12.x
+    Timeout: 180
+    Environment:
+      Variables:
+        SONG_BUCKET: sam-app-ihm
+        SONG_KEY: songData.json
+  Api:
+    Cors:
+      AllowMethods: '''OPTIONS,POST,GET'''
+      AllowHeaders: '''Content-Type'''
+      AllowOrigin: '''*'''
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: serverless-leaderboard
+    Description: Serverless Leaderboard Implementation with Redis
+    Author: svenanderson
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: ../../LICENSE.txt
+    ReadmeUrl: ../../README.md
+    Labels:
+    - leaderboard
+    HomePageUrl: https://github.com/Lambda-Store/serverless-leaderboard
+    SemanticVersion: '0.0.1'
+    SourceCodeUrl: https://github.com/Lambda-Store/serverless-leaderboard
 Resources:
-  GetSongsFunction:
+  getAllSongsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: GetSongsFunction
-      Handler: app.getSongsLambdaHandler
-      Runtime: nodejs12.x
+      Handler: src/handlers/getAllSongs.handler
+      Description: The function to retreive all song data.
       Events:
-        GetSongs:
+        Api:
           Type: Api
           Properties:
-            Path: /songs
-            Method: get
+            Path: /
+            Method: GET
+      CodeUri: getAllSongsFunction
+  getSongFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/getSong.handler
+      Description: The function to get one song's information.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /song
+            Method: POST
+      CodeUri: getSongFunction
 Outputs:
-  GetSongsApi:
-    Description: API Gateway endpoint URL for Prod stage for Get Songs function
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/songs/
-  GetSongsFunction:
-    Description: Get Songs Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - GetSongsFunction
-      - Arn
-  GetSongsFunctionIamRole:
-    Description: Implicit IAM Role created for Get Songs function
-    Value:
-      Fn::GetAtt:
-      - GetSongsFunctionRole
-      - Arn
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/

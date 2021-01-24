@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: serverless-leaderboard
+Transform:
+- AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    Timeout: 180
+  Api:
+    Cors:
+      AllowMethods: '''OPTIONS,POST,GET'''
+      AllowHeaders: '''Content-Type'''
+      AllowOrigin: '''*'''
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: serverless-leaderboard
+    Description: Serverless Leaderboard Implementation with Redis
+    Author: svenanderson
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: s3://serverless-leaderboard/2b42edef8fa55315f34f2370b4715ca9
+    ReadmeUrl: s3://serverless-leaderboard/dfc8064bd92c5b3b3591ebf4769458e4
+    Labels:
+    - leaderboard
+    HomePageUrl: https://github.com/Lambda-Store/serverless-leaderboard
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/Lambda-Store/serverless-leaderboard
+Resources:
+  getAllSongsunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/getAllSongs.handler
+      Description: The function to retreive all song data.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+      CodeUri: s3://serverless-leaderboard/d5874573ebde93fb5c62a8250de156ed
+  getSongFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/getSong.handler
+      Description: The function to get one song's information.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /song
+            Method: POST
+      CodeUri: s3://serverless-leaderboard/d5874573ebde93fb5c62a8250de156ed
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
