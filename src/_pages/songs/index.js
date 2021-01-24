@@ -12,26 +12,8 @@ const Table = styled.div`
   border-radius: 16px;
 `;
 
-export const Songs = () => {
-  const [songs, setSongs] = useState([]);
-  useEffect(() => {
-    fetch(process.env.REACT_APP_GET_ALL_SONGS_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setSongs(data);
-      });
-
-    fetch(process.env.REACT_APP_GET_SONG_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: `
-      {getSongInfo(song: "Checles") {artist playCount metricA}}`,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
-  }, []);
+export const Songs = ({ allSongsData }) => {
+  const [songs, setSongs] = useState(allSongsData);
 
   return (
     <>
