@@ -58,25 +58,21 @@ const formatHeaderCell = (value) => {
 export const TableHeader = ({ songs, setSongs }) => {
   const songKeys = Object.keys(songs[0]);
 
-  const compare = (column) => {
+  const compare = (column, orderBy) => {
     return (a, b) => {
       if (a[column] < b[column]) {
-        return -1;
+        return orderBy === 'descending' ? 1 : -1;
       }
       if (a[column] > b[column]) {
-        return 1;
+        return orderBy === 'descending' ? -1 : 1;
       }
       return 0;
     };
   };
 
-  const sortAndSetSongs = (column, descending) => {
-    const sorted = [...songs].sort(compare(column));
-    if (descending) {
-      setSongs(sorted.reverse());
-    } else {
-      setSongs(sorted);
-    }
+  const sortAndSetSongs = (column, orderBy) => {
+    const sortedSongs = [...songs].sort(compare(column, orderBy));
+    setSongs(songs => sortedSongs);
   };
 
   const map = useMemo(() => {
@@ -94,11 +90,13 @@ export const TableHeader = ({ songs, setSongs }) => {
           <ColumnName style={{ marginRight: 'auto' }}>
             {map[songKey]}
           </ColumnName>
-          <SortArrowClickContainer onClick={() => sortAndSetSongs(songKey)}>
+          <SortArrowClickContainer
+            onClick={() => sortAndSetSongs(songKey, 'ascending')}
+          >
             <SortArrow />
           </SortArrowClickContainer>
           <SortArrowClickContainer
-            onClick={() => sortAndSetSongs(songKey, true)}
+            onClick={() => sortAndSetSongs(songKey, 'descending')}
           >
             <SortArrow rotate />
           </SortArrowClickContainer>
