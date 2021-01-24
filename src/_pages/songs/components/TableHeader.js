@@ -2,37 +2,31 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { SortArrow } from '_components';
+import { colors } from '_constants';
 
-const StyledTableRow = styled.div`
+const StyledTableHeader = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
 `;
 
 const TableCell = styled.div`
-  ${({ allowSort }) =>
-    allowSort
-      ? `
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  `
-      : 'display: inline-block'};
-  border: 1px solid black;
-  padding: 5px;
-  min-width: 200px;
-  max-width: 200px;
-  min-height: 10px;
-  max-height: 10px;
-  width: 200px;
+  border-bottom: 2px solid ${colors.brandBorder};
+  padding: 20px;
+  min-width: 225px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: white;
+  background-color: ${colors.tableHeader};
 `;
 
 const ColumnName = styled.div`
   margin-right: auto;
+  text-transform: capitalize;
 `;
 
 const SortArrowClickContainer = styled.div`
@@ -45,14 +39,14 @@ const SortArrowClickContainer = styled.div`
 
 const formatHeaderCell = (value) => {
   if (value.includes('metric')) {
-    return value.replace('metric', 'METRIC ');
+    return value.replace('metric', 'Metric ');
   } else if (value === 'playCount') {
-    return 'PLAY COUNT';
+    return 'Play Count';
   } else if (value === 'songReleaseDate') {
-    return 'SONG RELEASE DATE';
+    return 'Song Release Date';
   }
 
-  return value.toUpperCase();
+  return value;
 };
 
 export const TableHeader = ({ songs, setSongs }) => {
@@ -84,12 +78,10 @@ export const TableHeader = ({ songs, setSongs }) => {
   }, [songKeys]);
 
   return (
-    <StyledTableRow>
+    <StyledTableHeader>
       {songKeys.map((songKey, index) => (
-        <TableCell key={songKey + '-' + index} allowSort>
-          <ColumnName style={{ marginRight: 'auto' }}>
-            {map[songKey]}
-          </ColumnName>
+        <TableCell key={songKey + '-' + index}>
+          <ColumnName>{map[songKey]}</ColumnName>
           <SortArrowClickContainer
             onClick={() => sortAndSetSongs(songKey, 'ascending')}
           >
@@ -102,6 +94,6 @@ export const TableHeader = ({ songs, setSongs }) => {
           </SortArrowClickContainer>
         </TableCell>
       ))}
-    </StyledTableRow>
+    </StyledTableHeader>
   );
 };

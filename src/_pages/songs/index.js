@@ -6,19 +6,10 @@ import { colors } from '_constants';
 import { TableHeader, TableRow } from './components';
 
 const Table = styled.div`
-  width: 100%;
-  border: 1px solid black;
+  margin: 0 50px 50px;
+  border: 1px solid #c33052;
   overflow: scroll;
-  background-color: ${colors.table};
-  &::-webkit-scrollbar {
-    -webkit-appearance: none;
-    height: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
-  }
+  border-radius: 16px;
 `;
 
 export const Songs = () => {

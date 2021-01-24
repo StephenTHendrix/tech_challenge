@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { colors } from '_constants';
 
 const StyledTableRow = styled.div`
   display: flex;
@@ -8,25 +9,14 @@ const StyledTableRow = styled.div`
 `;
 
 const TableCell = styled.div`
-  ${({ allowSort }) =>
-    allowSort
-      ? `
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  `
-      : 'display: inline-block'};
-  border: 1px solid black;
-  padding: 5px;
-  min-width: 200px;
-  max-width: 200px;
-  min-height: 10px;
-  max-height: 10px;
-  width: 200px;
+  display: inline-block;
+  border-bottom: 2px solid ${colors.brandBorder};
+  padding: 40px 20px;
+  min-width: 225px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: white;
+  background-color: ${colors.fadedBrand};
 `;
 
 export const TableRow = ({ song }) => {

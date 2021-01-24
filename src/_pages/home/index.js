@@ -23,7 +23,7 @@ const Button = styled(Link)`
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: ${colors.table};
+  background-color: ${colors.tableHeader};
   color: white;
   height: 75px;
   width: 150px;
