@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import { GlobalStyles } from '../globalStyles';
-import { Home, Songs } from '_pages';
+import { Home, Song, Songs } from '_pages';
 import { Navbar } from '_components';
 
 export const Routes = () => {
@@ -18,6 +18,7 @@ export const Routes = () => {
         <Navbar />
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/song" component={Song} />
           <Route exact path="/songs" component={Songs} />
           <Redirect to="/" />
         </Switch>
