@@ -3,7 +3,7 @@ import {
   Switch,
   Redirect,
   Route,
-  BrowserRouter as Router,
+  HashRouter as Router,
 } from 'react-router-dom';
 
 import { GlobalStyles } from '../globalStyles';
@@ -14,7 +14,7 @@ export const Routes = ({ allSongsData }) => {
   return (
     <>
       <GlobalStyles />
-      <Router>
+      <Router basename="/">
         <Navbar />
         <Switch>
           <Route exact path="/" component={Home} />
