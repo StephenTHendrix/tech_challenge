@@ -72,7 +72,7 @@ export const TableHeader = ({ songs, setSongs }) => {
 
   const sortAndSetSongs = (column, orderBy) => {
     const sortedSongs = [...songs].sort(compare(column, orderBy));
-    setSongs(songs => sortedSongs);
+    setSongs((songs) => sortedSongs);
   };
 
   const map = useMemo(() => {
