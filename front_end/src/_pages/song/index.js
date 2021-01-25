@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { colors } from '_constants';
+import { awsBaseURL } from '_constants/urlConstants';
 import { SongDetailCard } from './components/songDetailCard';
 
 const StyledInput = styled.input`
@@ -151,7 +152,7 @@ export const Song = ({ songKeys }) => {
     if (queryDisabled) {
       return;
     }
-    fetch(process.env.REACT_APP_GET_SONG_URL, {
+    fetch(awsBaseURL + process.env.REACT_APP_GET_SONG_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: `
