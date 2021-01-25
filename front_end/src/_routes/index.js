@@ -10,7 +10,7 @@ import { GlobalStyles } from '../globalStyles';
 import { Home, Song, Songs } from '_pages';
 import { Navbar } from '_components';
 
-export const Routes = ({ allSongsData, songKeys }) => {
+export const Routes = ({ allSongsData, songKeys, fetchFailed }) => {
   return (
     <>
       <GlobalStyles />
@@ -27,7 +27,11 @@ export const Routes = ({ allSongsData, songKeys }) => {
             exact
             path="/songs"
             component={() => (
-              <Songs allSongsData={allSongsData} songKeys={songKeys} />
+              <Songs
+                allSongsData={allSongsData}
+                songKeys={songKeys}
+                fetchFailed={fetchFailed}
+              />
             )}
           />
           <Redirect to="/" />

@@ -6,7 +6,7 @@
 
 - Multiple handlers
 
-- graphQL implemented for new handlers that allows for optional data retrieval related to a song
+- graphQL implemented for new song detail handler; get only as many details as you want
 
 - Modular functions for retrieving data from S3 and handling errors
 
@@ -17,6 +17,8 @@
 - Updated styling
 
 - New page that utilizes new handler input to get details about a song
+
+- General refactoring; for example, song data is retrieved in `App.js`, which is passed through the application along with song keys
 
 ---
 

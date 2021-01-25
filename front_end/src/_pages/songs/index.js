@@ -12,12 +12,30 @@ const Table = styled.div`
   border-radius: 16px;
 `;
 
-export const Songs = ({ allSongsData, songKeys }) => {
+const ShowError = styled.div`
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: ${colors.table};
+  color: white;
+  height: 100px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  text-align: center;
+`;
+
+export const Songs = ({ allSongsData, songKeys, fetchFailed }) => {
   const [songs, setSongs] = useState(allSongsData);
 
   return (
     <>
-      {songs.length ? (
+      {fetchFailed ? (
+        <ShowError>We ran into a problem retrieving the data.</ShowError>
+      ) : songs.length ? (
         <Table>
           <TableHeader songs={songs} setSongs={setSongs} songKeys={songKeys} />
           {songs.map((song, index) => (

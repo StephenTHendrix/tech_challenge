@@ -1,8 +1,10 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 
+import { Loader } from '_components';
 import { colors } from '_constants';
 import { awsBaseURL } from '_constants/urlConstants';
+import { formatSongKey } from '_utils/formatSongKey';
 import { SongDetailCard } from './components/songDetailCard';
 
 const StyledInput = styled.input`
@@ -30,8 +32,7 @@ const Button = styled.div`
   background-color: white;
   ${({ disabled }) => !disabled && 'cursor: pointer'};
   margin: 0 5px;
-  border: ${({ disabled }) =>
-    disabled ? `2px solid ${colors.table}` : `2px solid ${colors.brand}`};
+  border: 2px solid ${({ buttonBorderColor }) => buttonBorderColor};
   border-radius: 6px;
 `;
 
@@ -85,22 +86,25 @@ export const Song = ({ songKeys }) => {
   const [selectedQueryArguments, setSelectedQueryArguments] = useState([]);
   const [returnedSongInfo, setReturnedSongInfo] = useState({});
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [buttonBorderColor, setButtonBorderColor] = useState('red');
 
   const userHasInputSong = songName.length > 0;
   const userHasChosenDetails = selectedQueryArguments.length > 0;
   const queryDisabled = !userHasInputSong || !userHasChosenDetails;
 
-  const formatHeaderCell = (value) => {
-    if (value.includes('metric')) {
-      return value.replace('metric', 'Metric ');
-    } else if (value === 'playCount') {
-      return 'Play Count';
-    } else if (value === 'songReleaseDate') {
-      return 'Song Release Date';
+  useEffect(() => {
+    if (!userHasInputSong && !userHasChosenDetails) {
+      setButtonBorderColor(colors.table);
+    } else if (
+      (!userHasInputSong && userHasChosenDetails) ||
+      (userHasInputSong && !userHasChosenDetails)
+    ) {
+      setButtonBorderColor('#ffde7d');
+    } else {
+      setButtonBorderColor(colors.brand);
     }
-
-    return value;
-  };
+  }, [userHasChosenDetails, userHasInputSong]);
 
   const handleQueryArgumentSelect = useCallback(
     (argument) => {
@@ -125,7 +129,7 @@ export const Song = ({ songKeys }) => {
   const songKeyValueMap = useMemo(() => {
     return songKeys.map((songKey) => ({
       songKey,
-      songValue: formatHeaderCell(songKey),
+      songValue: formatSongKey(songKey),
     }));
   }, [songKeys]);
 
@@ -143,7 +147,7 @@ export const Song = ({ songKeys }) => {
   const returnedDetailsMap = useMemo(() => {
     return Object.keys(returnedSongInfo).map((key) => (
       <ReturnedDetailCard key={key}>
-        {formatHeaderCell(key)}: {returnedSongInfo[key]}
+        {formatSongKey(key)}: {returnedSongInfo[key]}
       </ReturnedDetailCard>
     ));
   }, [returnedSongInfo]);
@@ -152,6 +156,7 @@ export const Song = ({ songKeys }) => {
     if (queryDisabled) {
       return;
     }
+    setLoading(true);
     fetch(awsBaseURL + process.env.REACT_APP_GET_SONG_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -167,6 +172,13 @@ export const Song = ({ songKeys }) => {
           setReturnedSongInfo({});
           setError(data?.errors[0]?.message);
         }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setReturnedSongInfo({});
+        setError(error?.message || 'Something went wrong.');
+        console.log(error.message);
       });
   };
 
@@ -177,7 +189,11 @@ export const Song = ({ songKeys }) => {
           placeholder="Enter Song Name (Required)"
           onChange={(event) => setSongName(event.target.value)}
         />
-        <Button onClick={getSongDetail} disabled={queryDisabled}>
+        <Button
+          onClick={getSongDetail}
+          disabled={queryDisabled}
+          buttonBorderColor={buttonBorderColor}
+        >
           Get Song Detail
         </Button>
       </RunQueryContainer>
@@ -185,13 +201,18 @@ export const Song = ({ songKeys }) => {
         What would you like to know? Select at least one. (Required)
       </SelectOneText>
       <OptionsContainer>{optionsMap}</OptionsContainer>
-      {(!returnedSongInfoIsEmpty || error) && (
-        <Details>
-          {error
-            ? 'Something went wrong. Try a different song name.'
-            : returnedDetailsMap}
-        </Details>
-      )}
+      {(!returnedSongInfoIsEmpty || error) &&
+        (loading ? (
+          <Loader />
+        ) : (
+          <Details>
+            {error === 'Failed to fetch'
+              ? `Couldn't retrieve data.`
+              : error
+              ? 'Something went wrong. Try a different song name.'
+              : returnedDetailsMap}
+          </Details>
+        ))}
     </>
   );
 };

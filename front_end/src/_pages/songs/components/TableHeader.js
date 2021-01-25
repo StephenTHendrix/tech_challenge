@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { SortArrow } from '_components';
 import { colors } from '_constants';
+import { formatSongKey } from '_utils/formatSongKey';
 
 const StyledTableHeader = styled.div`
   display: flex;
@@ -37,18 +38,6 @@ const SortArrowClickContainer = styled.div`
   margin: 0 5px;
 `;
 
-const formatHeaderCell = (value) => {
-  if (value.includes('metric')) {
-    return value.replace('metric', 'Metric ');
-  } else if (value === 'playCount') {
-    return 'Play Count';
-  } else if (value === 'songReleaseDate') {
-    return 'Song Release Date';
-  }
-
-  return value;
-};
-
 export const TableHeader = ({ songs, setSongs, songKeys }) => {
   const compare = (column, orderBy) => {
     return (a, b) => {
@@ -67,22 +56,10 @@ export const TableHeader = ({ songs, setSongs, songKeys }) => {
     setSongs((songs) => sortedSongs);
   };
 
-  const formatHeaderCell = (value) => {
-    if (value.includes('metric')) {
-      return value.replace('metric', 'Metric ');
-    } else if (value === 'playCount') {
-      return 'Play Count';
-    } else if (value === 'songReleaseDate') {
-      return 'Song Release Date';
-    }
-
-    return value;
-  };
-
   const map = useMemo(() => {
     const mappedSongKeys = {};
     songKeys?.map(
-      (songKey) => (mappedSongKeys[songKey] = formatHeaderCell(songKey))
+      (songKey) => (mappedSongKeys[songKey] = formatSongKey(songKey))
     );
     return mappedSongKeys;
   }, [songKeys]);
