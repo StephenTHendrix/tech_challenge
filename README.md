@@ -4,9 +4,9 @@
 
 ### Back End
 
-- Multiple handlers
+- Multiple lambda handlers
 
-- graphQL implemented for new song detail handler; get only as many details as you want
+- GraphQL implemented for new song detail handler; get only as many details as you want
 
 - Modular functions for retrieving data from S3 and handling errors
 
