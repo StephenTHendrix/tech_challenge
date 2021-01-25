@@ -1,28 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { colors } from '_constants';
-import { SongAttributeCard } from './components/songAttributeCard';
-
-const Content = styled.div`
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: ${colors.table};
-  color: white;
-  height: 100px;
-  width: 200px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { SongDetailCard } from './components/songDetailCard';
 
 const StyledInput = styled.input`
   width: 200px;
   height: 60px;
   margin: 0 5px;
   text-align: center;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid gray;
+  color: #45443b;
+
+  &:focus {
+    outline: none;
+    border: 2px solid ${colors.brand};
+  }
 `;
 
 const Button = styled.div`
@@ -32,9 +27,11 @@ const Button = styled.div`
   width: 200px;
   height: 60px;
   background-color: white;
-  cursor: pointer;
+  ${({ disabled }) => !disabled && 'cursor: pointer'};
   margin: 0 5px;
-  border: 1px solid gray;
+  border: ${({ disabled }) =>
+    disabled ? `2px solid ${colors.table}` : `2px solid ${colors.brand}`};
+  border-radius: 6px;
 `;
 
 const RunQueryContainer = styled.div`
@@ -53,18 +50,44 @@ const OptionsContainer = styled.div`
 
 const Details = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  width: 50%;
+  align-items: center;
   margin: 0 auto;
+  background-color: ${colors.table};
+  border-radius: 8px;
+  width: 40%;
+  padding: 10px;
+  color: white;
 `;
 
-export const Song = ({ allSongsData }) => {
-  const [songs, setSongs] = useState(allSongsData);
+const ReturnedDetailCard = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 10px 0;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 8px;
+  text-transform: capitalize;
+  width: 50%;
+  color: #45443b;
+`;
+
+const SelectOneText = styled.div`
+  text-align: center;
+`;
+
+export const Song = ({ songKeys }) => {
   const [songName, setSongName] = useState('');
   const [selectedQueryArguments, setSelectedQueryArguments] = useState([]);
   const [returnedSongInfo, setReturnedSongInfo] = useState({});
+  const [error, setError] = useState('');
 
-  const songKeys = Object.keys(songs?.[0] || []);
+  const userHasInputSong = songName.length > 0;
+  const userHasChosenDetails = selectedQueryArguments.length > 0;
+  const queryDisabled = !userHasInputSong || !userHasChosenDetails;
 
   const formatHeaderCell = (value) => {
     if (value.includes('metric')) {
@@ -78,14 +101,56 @@ export const Song = ({ allSongsData }) => {
     return value;
   };
 
-  const map = useMemo(() => {
+  const handleQueryArgumentSelect = useCallback(
+    (argument) => {
+      let currentArguments = [...selectedQueryArguments];
+
+      if (currentArguments.includes(argument)) {
+        currentArguments = currentArguments.filter(
+          (currentArgument) => currentArgument !== argument
+        );
+      } else {
+        currentArguments.push(argument);
+      }
+      setSelectedQueryArguments(currentArguments);
+    },
+    [selectedQueryArguments]
+  );
+
+  const returnedSongInfoIsEmpty = useMemo(() => {
+    return Object.keys(returnedSongInfo).length === 0;
+  }, [returnedSongInfo]);
+
+  const songKeyValueMap = useMemo(() => {
     return songKeys.map((songKey) => ({
       songKey,
       songValue: formatHeaderCell(songKey),
     }));
   }, [songKeys]);
 
-  const runQuery = () => {
+  const optionsMap = useMemo(() => {
+    return songKeyValueMap.map((song) => (
+      <SongDetailCard
+        key={song.songKey}
+        label={song.songValue}
+        onClick={() => handleQueryArgumentSelect(song.songKey)}
+        selected={selectedQueryArguments.includes(song.songKey)}
+      />
+    ));
+  }, [handleQueryArgumentSelect, selectedQueryArguments, songKeyValueMap]);
+
+  const returnedDetailsMap = useMemo(() => {
+    return Object.keys(returnedSongInfo).map((key) => (
+      <ReturnedDetailCard key={key}>
+        {formatHeaderCell(key)}: {returnedSongInfo[key]}
+      </ReturnedDetailCard>
+    ));
+  }, [returnedSongInfo]);
+
+  const getSongDetail = () => {
+    if (queryDisabled) {
+      return;
+    }
     fetch(process.env.REACT_APP_GET_SONG_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -94,49 +159,38 @@ export const Song = ({ allSongsData }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setReturnedSongInfo(data.data.getSongInfo);
+        if (data?.data?.getSongInfo) {
+          setReturnedSongInfo(data?.data?.getSongInfo || data?.errors[0]);
+          setError('');
+        } else {
+          setReturnedSongInfo({});
+          setError(data?.errors[0]?.message);
+        }
       });
-  };
-
-  const handleQueryArgumentSelect = (argument) => {
-    let currentArguments = [...selectedQueryArguments];
-
-    if (currentArguments.includes(argument)) {
-      currentArguments = currentArguments.filter(
-        (currentArgument) => currentArgument !== argument
-      );
-    } else {
-      currentArguments.push(argument);
-    }
-    setSelectedQueryArguments(currentArguments);
   };
 
   return (
     <>
       <RunQueryContainer>
         <StyledInput
-          placeholder="Enter Song Name"
+          placeholder="Enter Song Name (Required)"
           onChange={(event) => setSongName(event.target.value)}
         />
-        <Button onClick={runQuery}>Get Song Detail</Button>
+        <Button onClick={getSongDetail} disabled={queryDisabled}>
+          Get Song Detail
+        </Button>
       </RunQueryContainer>
-      <OptionsContainer>
-        {map.map((song) => (
-          <SongAttributeCard
-            key={song.songKey}
-            label={song.songValue}
-            onClick={() => handleQueryArgumentSelect(song.songKey)}
-            selected={selectedQueryArguments.includes(song.songKey)}
-          />
-        ))}
-      </OptionsContainer>
-      <Details>
-        {Object.keys(returnedSongInfo).map((key) => (
-          <div key={key}>
-            {formatHeaderCell(key)}: {returnedSongInfo[key]}
-          </div>
-        ))}
-      </Details>
+      <SelectOneText>
+        What would you like to know? Select at least one. (Required)
+      </SelectOneText>
+      <OptionsContainer>{optionsMap}</OptionsContainer>
+      {(!returnedSongInfoIsEmpty || error) && (
+        <Details>
+          {error
+            ? 'Something went wrong. Try a different song name.'
+            : returnedDetailsMap}
+        </Details>
+      )}
     </>
   );
 };

@@ -10,7 +10,7 @@ const StyledTableRow = styled.div`
 
 const TableCell = styled.div`
   display: inline-block;
-  border-bottom: 2px solid ${colors.brandBorder};
+  border-bottom: 2px solid ${colors.tableBorder};
   padding: 40px 20px;
   min-width: 225px;
   white-space: nowrap;

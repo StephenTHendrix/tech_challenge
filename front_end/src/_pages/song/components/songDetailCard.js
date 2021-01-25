@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { colors } from '_constants';
 
-const AnswerCard = styled.div`
+const StyledSongDetailCard = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -26,17 +26,17 @@ const Indicator = styled.div`
   background-color: ${({ selected }) => (selected ? colors.brand : 'white')};
 `;
 
-const AnswerText = styled.div`
+const DetailText = styled.div`
   text-align: left;
   width: 80%;
   text-transform: capitalize;
 `;
 
-export const SongAttributeCard = ({ label, selected, onClick }) => {
+export const SongDetailCard = ({ label, selected, onClick }) => {
   return (
-    <AnswerCard selected={selected} onClick={onClick}>
+    <StyledSongDetailCard selected={selected} onClick={onClick}>
       <Indicator selected={selected} />
-      <AnswerText>{label}</AnswerText>
-    </AnswerCard>
+      <DetailText>{label}</DetailText>
+    </StyledSongDetailCard>
   );
 };

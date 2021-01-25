@@ -16,27 +16,39 @@ const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 6px;
 `;
 
-const Button = styled(Link)`
+const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: ${colors.table};
+`;
+
+const Button = styled(Link)`
   color: white;
   height: 75px;
   width: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 6px;
+  background-color: ${colors.table};
+  margin: 0 5px;
 `;
 
 export const Home = () => {
   return (
     <>
       <Content>Song Database</Content>
-      <Button to="/songs">Get Started</Button>
+      <Buttons>
+        <Button to="/songs">See All Songs</Button>
+        <Button to="/song">Get Song Detail</Button>
+      </Buttons>
     </>
   );
 };

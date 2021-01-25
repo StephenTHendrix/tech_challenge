@@ -12,14 +12,14 @@ const Table = styled.div`
   border-radius: 16px;
 `;
 
-export const Songs = ({ allSongsData }) => {
+export const Songs = ({ allSongsData, songKeys }) => {
   const [songs, setSongs] = useState(allSongsData);
 
   return (
     <>
       {songs.length ? (
         <Table>
-          <TableHeader songs={songs} setSongs={setSongs} />
+          <TableHeader songs={songs} setSongs={setSongs} songKeys={songKeys} />
           {songs.map((song, index) => (
             <TableRow song={song} key={song.song + '-' + index} />
           ))}
