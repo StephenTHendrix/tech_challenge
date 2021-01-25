@@ -178,7 +178,6 @@ export const Song = ({ songKeys }) => {
         setLoading(false);
         setReturnedSongInfo({});
         setError(error?.message || 'Something went wrong.');
-        console.log(error.message);
       });
   };
 
