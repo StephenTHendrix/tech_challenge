@@ -201,18 +201,16 @@ export const Song = ({ songKeys }) => {
         What would you like to know? Select at least one. (Required)
       </SelectOneText>
       <OptionsContainer>{optionsMap}</OptionsContainer>
-      {(!returnedSongInfoIsEmpty || error) &&
-        (loading ? (
-          <Loader />
-        ) : (
-          <Details>
-            {error === 'Failed to fetch'
-              ? `Couldn't retrieve data.`
-              : error
-              ? 'Something went wrong. Try a different song name.'
-              : returnedDetailsMap}
-          </Details>
-        ))}
+      {loading && <Loader />}
+      {(!returnedSongInfoIsEmpty || error) && (
+        <Details>
+          {error === 'Failed to fetch'
+            ? `Couldn't retrieve data.`
+            : error
+            ? 'Something went wrong. Try a different song name.'
+            : returnedDetailsMap}
+        </Details>
+      )}
     </>
   );
 };
